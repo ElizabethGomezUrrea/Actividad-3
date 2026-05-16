@@ -29,6 +29,47 @@ def crear_tabla(conn):
     # Guardar los cambios en la base de datos.
     conn.commit()
 
+# Función para insertar los datos falsos
+# generados con Faker en la tabla.
+
+def insertar_datos(conn, rows):
+
+    query = text("""
+
+        INSERT INTO personas_elizabeth (
+
+            nombre_completo,
+            fecha_nacimiento,
+            correo_electronico,
+            telefono,
+            ciudad,
+            direccion,
+            estado_civil,
+            ocupacion
+
+        )
+
+        VALUES (
+
+            :nombre_completo,
+            :fecha_nacimiento,
+            :correo_electronico,
+            :telefono,
+            :ciudad,
+            :direccion,
+            :estado_civil,
+            :ocupacion
+
+        )
+
+    """)
+
+    # Insertar todos los registros de manera masiva.
+    conn.execute(query, rows)
+    
+     # Guardar los cambios en la base de datos.
+    conn.commit()
+
 def main():
    # Cargar .env
     load_dotenv()
@@ -67,13 +108,17 @@ def main():
 
            # Llamar la función para crear la tabla
           crear_tabla(conn)
-
           print("Tabla creada correctamente")
+
+          # insertar datos
+          insertar_datos(conn, rows)
+          print("100000 registros insertados correctamente")
 
       # Por si hay un error en la conexión. 
     except Exception as e:
        print("Error")
        print(e)
 
+# Ejecutar la función principal
 if __name__ == "__main__":
     main()
