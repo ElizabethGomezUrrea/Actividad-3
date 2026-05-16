@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine,text
 from dotenv import load_dotenv
+from faker import Faker
 import os
 
 #Función para crear la tabla personas_elizabeth 
@@ -38,6 +39,26 @@ def main():
     try:
        # Crear conexión con DBeaver 
        engine = create_engine(database_url)
+
+       # Crear instancia de Faker
+       fake = Faker("es_ES")
+
+       # Generar datos falsos 
+       rows =[
+           {
+                "nombre_completo": fake.name(),
+                "fecha_nacimiento": fake.date_of_birth(),
+                "correo_electronico": fake.unique.email(),
+                "telefono": fake.unique.phone_number(),
+                "ciudad": fake.city(),
+                "direccion": fake.address(),
+                "estado_civil": fake.random_element(elements=["Soltero", "Casado", "Divorciado", "Viudo"]),
+                "ocupacion": fake.job()
+           }
+
+           for _ in range(100000)
+
+       ]
 
        # Probar la conexión, si no hay error, se muestra el mensaje de conexión exitosa
        with engine.connect() as conn:
